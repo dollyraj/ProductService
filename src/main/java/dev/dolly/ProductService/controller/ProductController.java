@@ -33,4 +33,9 @@ public class ProductController {
     public FakeStoreProductDTO updateObject(@PathVariable("id") int productId,@RequestBody FakeStoreProductDTO fakeStoreProductDTO){
         return productService.updateObject(productId,fakeStoreProductDTO);
     }
+
+    @DeleteMapping("/products/{id}")
+    public Boolean deleteObject(@PathVariable("id") int productId){
+        return productService.deleteObject(productId);
+    }
 }

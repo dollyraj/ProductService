@@ -25,4 +25,8 @@ public class ProductService {
     public FakeStoreProductDTO updateObject(int productId, FakeStoreProductDTO fakeStoreProductDTO) {
          return fakeStoreClient.updateObject(productId,fakeStoreProductDTO);
     }
+
+    public Boolean deleteObject(int productId) {
+         return fakeStoreClient.deleteObject(productId);
+    }
 }
