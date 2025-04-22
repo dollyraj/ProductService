@@ -4,9 +4,7 @@ import dev.dolly.ProductService.dtos.request.FakeStoreProductDTO;
 import dev.dolly.ProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ProductController {
@@ -24,5 +22,15 @@ public class ProductController {
     @GetMapping("/products/{id}")
     public FakeStoreProductDTO getProductById(@PathVariable("id") int productId){
         return productService.getProduct(productId);
+    }
+
+    @PostMapping("/products")
+    public FakeStoreProductDTO createObject(@RequestBody FakeStoreProductDTO fakeStoreProductDTO){
+        return productService.createObject(fakeStoreProductDTO);
+    }
+
+    @PutMapping("/products/{id}")
+    public FakeStoreProductDTO updateObject(@PathVariable("id") int productId,@RequestBody FakeStoreProductDTO fakeStoreProductDTO){
+        return productService.updateObject(productId,fakeStoreProductDTO);
     }
 }

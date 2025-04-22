@@ -17,4 +17,12 @@ public class ProductService {
     public FakeStoreProductDTO getProduct(int productId) {
          return fakeStoreClient.getProduct(productId);
     }
+
+    public FakeStoreProductDTO createObject(FakeStoreProductDTO fakeStoreProductDTO) {
+         return fakeStoreClient.createObject(fakeStoreProductDTO);
+    }
+
+    public FakeStoreProductDTO updateObject(int productId, FakeStoreProductDTO fakeStoreProductDTO) {
+         return fakeStoreClient.updateObject(productId,fakeStoreProductDTO);
+    }
 }
