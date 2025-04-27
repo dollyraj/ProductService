@@ -10,7 +10,6 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 
 @Component
 public class FakeStoreClient {
@@ -64,6 +63,8 @@ public class FakeStoreClient {
     }
 
 
+
+
     public Boolean deleteObject(int productId) {
         String url="https://fakestoreapi.com/products/"+productId;
         try{
@@ -73,4 +74,18 @@ public class FakeStoreClient {
             return false;
         }
     }
+
+    /*public User update(User user, Long userId) {
+        FakeStoreUserDto fakeStoreUserRequestDtoInput = from(user);
+        FakeStoreUserDto fakeStoreUserRequestDtoResponse = requestForEntity("https://fakestoreapi.com/users/{userId}",HttpMethod.PUT, fakeStoreUserRequestDtoInput, FakeStoreUserDto.class,userId).getBody();
+        User userResponse = from(fakeStoreUserRequestDtoResponse);
+        return userResponse;
+    }
+
+    private <T> ResponseEntity<T> requestForEntity(String url, HttpMethod httpMethod, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
+        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
+        return restTemplate.execute(url, httpMethod, requestCallback, responseExtractor, uriVariables);
+    }*/
 }

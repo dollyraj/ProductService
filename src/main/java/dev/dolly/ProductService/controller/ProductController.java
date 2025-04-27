@@ -1,10 +1,14 @@
 package dev.dolly.ProductService.controller;
 
 import dev.dolly.ProductService.dtos.request.FakeStoreProductDTO;
+import dev.dolly.ProductService.model.Product;
 import dev.dolly.ProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ProductController {
@@ -12,24 +16,56 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/products")
-    public FakeStoreProductDTO[] getAllProducts(){
+    @PostMapping("/product")
+    public ResponseEntity<Product> createProduct(@RequestBody Product product){
+        Product savedProduct=productService.saveProduct(product);
+        return ResponseEntity.ok(savedProduct);
+
+    }
+
+    @GetMapping("/product")
+    public ResponseEntity<List<Product>> getAllProducts(){
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable("id") int id){
+        Product savedProduct = productService.getProduct(id);
+        return ResponseEntity.ok(savedProduct);
+    }
+
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity<Boolean> deleteProductById(@PathVariable("id") int productId){
+        boolean response = productService.deleteProduct(productId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/product/{id}")
+    public ResponseEntity<Product> updateProductById(@RequestBody Product newProduct,@PathVariable("id") int productId){
+        Product savedProduct=productService.updateProduct(newProduct,productId);
+        return ResponseEntity.ok(savedProduct);
+    }
+
+
+    @GetMapping("/products/fake")
+    public FakeStoreProductDTO[] getAllFakeProducts(){
 
         return productService.getAllProductsFromFakeStore();
 
     }
 
-    @GetMapping("/products/{id}")
-    public FakeStoreProductDTO getProductById(@PathVariable("id") int productId){
-        return productService.getProduct(productId);
+    @GetMapping("/products/fake/{id}")
+    public FakeStoreProductDTO getFakeProductById(@PathVariable("id") int productId){
+        return productService.getFakeStoreProduct(productId);
     }
 
-    @PostMapping("/products")
+    @PostMapping("/products/fake")
     public FakeStoreProductDTO createObject(@RequestBody FakeStoreProductDTO fakeStoreProductDTO){
         return productService.createObject(fakeStoreProductDTO);
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/products/fake/{id}")
     public FakeStoreProductDTO updateObject(@PathVariable("id") int productId,@RequestBody FakeStoreProductDTO fakeStoreProductDTO){
         return productService.updateObject(productId,fakeStoreProductDTO);
     }
