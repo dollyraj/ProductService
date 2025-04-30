@@ -48,7 +48,7 @@ public class ProductService {
 
     public Product updateProduct(Product newProduct, int productId){
         Product savedProduct = getProduct(productId);
-        newProduct.setId(productId);
+       // newProduct.setId(productId);
         Product updatedProduct = productRepository.save(newProduct);
         return updatedProduct;
     }
@@ -71,5 +71,10 @@ public class ProductService {
 
     public Boolean deleteObject(int productId) {
          return fakeStoreClient.deleteObject(productId);
+    }
+
+    public  List<Product> matchedProducts(String description){
+
+        return productRepository.findAllByDescription(description);
     }
 }
