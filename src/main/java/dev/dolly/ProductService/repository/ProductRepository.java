@@ -1,5 +1,6 @@
 package dev.dolly.ProductService.repository;
 
+import dev.dolly.ProductService.dtos.request.ProductProjection;
 import dev.dolly.ProductService.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,10 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Integer> {
     List<Product> findAllByDescription(String description);
+    List<Product> findAllByDescriptionIgnoreCase(String description);
+    Product findFirstByDescriptionIgnoreCase(String description);
+
+    ProductProjection findFirstByName(String name);
 
 }
 /*extending JpaRepository adds all fundamental CRUD operation methods in ProductRepository interface

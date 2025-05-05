@@ -2,6 +2,7 @@ package dev.dolly.ProductService.service;
 
 import dev.dolly.ProductService.client.FakeStoreClient;
 import dev.dolly.ProductService.dtos.request.FakeStoreProductDTO;
+import dev.dolly.ProductService.dtos.request.ProductProjection;
 import dev.dolly.ProductService.exception.ProductNotFoundException;
 import dev.dolly.ProductService.model.Product;
 import dev.dolly.ProductService.repository.ProductRepository;
@@ -51,6 +52,10 @@ public class ProductService {
        // newProduct.setId(productId);
         Product updatedProduct = productRepository.save(newProduct);
         return updatedProduct;
+    }
+
+    public ProductProjection getProductProjection(String productName){
+        return productRepository.findFirstByName(productName);
     }
 
      public FakeStoreProductDTO[] getAllProductsFromFakeStore(){

@@ -1,6 +1,7 @@
 package dev.dolly.ProductService.controller;
 
 import dev.dolly.ProductService.dtos.request.FakeStoreProductDTO;
+import dev.dolly.ProductService.dtos.request.ProductProjection;
 import dev.dolly.ProductService.model.Product;
 import dev.dolly.ProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,16 @@ public class ProductController {
         return ResponseEntity.ok(savedProduct);
     }
 
-    @GetMapping("/product/v2/{description}")
+    @GetMapping("/product/desc/{description}")
     public ResponseEntity<List<Product>> getProductById(@PathVariable("description") String description){
         List<Product> matchedProducts = productService.matchedProducts(description);
         return ResponseEntity.ok(matchedProducts);
+    }
+
+    @GetMapping("/product/projection/{name}")
+    public ResponseEntity<ProductProjection> getProductProjectionByName(@PathVariable("name") String name){
+        ProductProjection productProjection = productService.getProductProjection(name);
+        return ResponseEntity.ok(productProjection);
     }
 
     @DeleteMapping("/product/{id}")
