@@ -51,10 +51,10 @@ public class ProductService {
      return productRepository.findAll();
     }
 
-    public Product updateProduct(Product newProduct, int productId){
-        Product savedProduct = getProduct(productId);
-       // newProduct.setId(productId);
-        Product updatedProduct = productRepository.save(newProduct);
+    public Product updateProduct(Product newProduct,int productId){
+        Product savedProduct=getProduct(productId);
+        newProduct.setId(savedProduct.getId());
+        Product updatedProduct=productRepository.save(newProduct);
         return updatedProduct;
     }
 
@@ -66,6 +66,8 @@ public class ProductService {
     public ProductProjection getProductProjection(String productName){
         return productRepository.findFirstByName(productName);
     }
+
+
 
      public FakeStoreProductDTO[] getAllProductsFromFakeStore(){
          return fakeStoreClient.getAllProducts();
