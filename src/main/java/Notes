@@ -50,3 +50,10 @@ controller -> service -> ProductProjection[3]
 
 controller can again use a DTO -> return even smaller subset,
 ProductInfoDTO[2]
+
+------Requirements for product service------
+1.CRUD operation on Product
+2.CRUD operation on Category
+3.Get All Products from Category API
+4.Get Category from Product API
+5.DTOs based APIs

@@ -12,17 +12,10 @@ import java.util.List;
 @Setter
 public class Category extends BaseModel {
 
-//    @Id
-//    @GeneratedValue(strategy=GenerationType.AUTO)
-//    private int id;
-    private String name;
-    private String description;
     //relation from category to product is onetomany
     @OneToMany(fetch =FetchType.EAGER)
     @JoinColumn(name="category_id")
     private List<Product> products;
-//    private LocalDateTime createdAt;
-//    private LocalDateTime updatedAt;
-//    private String createdBy;
-//    private String updatedBy;
+    private String name;
+    private String description;
 }

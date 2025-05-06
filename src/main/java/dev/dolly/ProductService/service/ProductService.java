@@ -4,6 +4,7 @@ import dev.dolly.ProductService.client.FakeStoreClient;
 import dev.dolly.ProductService.dtos.request.FakeStoreProductDTO;
 import dev.dolly.ProductService.dtos.request.ProductProjection;
 import dev.dolly.ProductService.exception.ProductNotFoundException;
+import dev.dolly.ProductService.model.Category;
 import dev.dolly.ProductService.model.Product;
 import dev.dolly.ProductService.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    CategoryService categoryService;
 
     public Product saveProduct(Product product){
 
@@ -54,6 +58,11 @@ public class ProductService {
         return updatedProduct;
     }
 
+    public List<Product> getAllProductsByCategoryId(int categoryId){
+        List<Product> products= categoryService.getAllProductsByCategory(categoryId);
+        return products;
+    }
+
     public ProductProjection getProductProjection(String productName){
         return productRepository.findFirstByName(productName);
     }
@@ -80,6 +89,6 @@ public class ProductService {
 
     public  List<Product> matchedProducts(String description){
 
-        return productRepository.findAllByDescription(description);
+        return productRepository.findAllByDescriptionIgnoreCase(description);
     }
 }

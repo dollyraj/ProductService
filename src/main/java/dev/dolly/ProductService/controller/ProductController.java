@@ -2,13 +2,16 @@ package dev.dolly.ProductService.controller;
 
 import dev.dolly.ProductService.dtos.request.FakeStoreProductDTO;
 import dev.dolly.ProductService.dtos.request.ProductProjection;
+import dev.dolly.ProductService.dtos.response.ProductResponseDTO;
 import dev.dolly.ProductService.model.Product;
+import dev.dolly.ProductService.service.CategoryService;
 import dev.dolly.ProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,6 +19,7 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
 
     @PostMapping("/product")
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
@@ -34,6 +38,23 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable("id") int id){
         Product savedProduct = productService.getProduct(id);
         return ResponseEntity.ok(savedProduct);
+    }
+
+    @GetMapping("/product/category/{id}")
+    public ResponseEntity<List<ProductResponseDTO>> getAllProductsByCategory(@PathVariable("id") int categoryId){
+           List<Product> savedProducts=productService.getAllProductsByCategoryId(categoryId);
+           List<ProductResponseDTO> productResponseDTOS=new ArrayList<>();
+           for(Product product:savedProducts){
+               System.out.println(product);
+               ProductResponseDTO productResponseDTO=new ProductResponseDTO();
+               productResponseDTO.setProductName(product.getName());
+               productResponseDTO.setProductDescription(product.getDescription());
+               productResponseDTO.setProductPrice(product.getPrice());
+               productResponseDTO.setRating(product.getRating());
+               productResponseDTOS.add(productResponseDTO);
+           }
+
+           return ResponseEntity.ok(productResponseDTOS);
     }
 
     @GetMapping("/product/desc/{description}")

@@ -1,12 +1,15 @@
 package dev.dolly.ProductService.controller;
 
 
+import dev.dolly.ProductService.dtos.request.CategoryRequestDTO;
+import dev.dolly.ProductService.dtos.response.CategoryResponseDTO;
 import dev.dolly.ProductService.model.Category;
 import dev.dolly.ProductService.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,27 +19,56 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/category")
-    public ResponseEntity<Category> createCategory(@RequestBody Category category){
-        Category savedCategory=categoryService.createCategory(category);
-        return ResponseEntity.ok(savedCategory);
+    public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody CategoryRequestDTO categoryRequestDTO){
+        Category savedCategory=categoryService.createCategory(categoryRequestDTO);
+        CategoryResponseDTO categoryResponseDTO=new CategoryResponseDTO();
+        categoryResponseDTO.setCategoryName(savedCategory.getName());
+        categoryResponseDTO.setCategoryDescription(savedCategory.getDescription());
+        return ResponseEntity.ok(categoryResponseDTO);
     }
 
     @GetMapping("/category")
-    public ResponseEntity<List<Category>> getAllCategories(){
-        List<Category> categories=categoryService.getAllCategory();
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<List<CategoryResponseDTO>> getAllCategories(){
+        List<Category> categories=categoryService.getAllCategories();
+        List<CategoryResponseDTO> categoryResponseDTOS=new ArrayList<>();
+
+        for(Category category:categories){
+            CategoryResponseDTO categoryResponseDTO=new CategoryResponseDTO();
+            categoryResponseDTO.setCategoryName(category.getName());
+            categoryResponseDTO.setCategoryDescription(category.getDescription());
+            categoryResponseDTOS.add(categoryResponseDTO);
+        }
+        return ResponseEntity.ok(categoryResponseDTOS);
     }
 
     @GetMapping("/category/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable("id") int id){
-        Category category= categoryService.getCategoryById(id);
-        return ResponseEntity.ok(category);
+    public ResponseEntity<CategoryResponseDTO> getCategoryById(@PathVariable("id") int id){
+        Category savedCategory= categoryService.getCategoryById(id);
+        CategoryResponseDTO categoryResponseDTO=new CategoryResponseDTO();
+        categoryResponseDTO.setCategoryName(savedCategory.getName());
+        categoryResponseDTO.setCategoryDescription(savedCategory.getDescription());
+        return ResponseEntity.ok(categoryResponseDTO);
     }
 
     @PutMapping("/category/{id}")
-    public ResponseEntity<Category> updateCategory(@RequestBody Category category,@PathVariable("id") int id){
-        Category updateCategory=categoryService.updateCategory(category, id);
-        return ResponseEntity.ok(updateCategory);
+    public ResponseEntity<CategoryResponseDTO> updateCategory(@RequestBody CategoryRequestDTO categoryRequestDTO,@PathVariable("id") int id){
+
+        Category updateCategory=categoryService.updateCategory(categoryRequestDTO, id);
+        CategoryResponseDTO categoryResponseDTO=new CategoryResponseDTO();
+        categoryResponseDTO.setCategoryName(updateCategory.getName());
+        categoryResponseDTO.setCategoryDescription(updateCategory.getDescription());
+        return ResponseEntity.ok(categoryResponseDTO);
+    }
+
+    @GetMapping("/category/product/{id}")
+    public ResponseEntity<CategoryResponseDTO> getCategoryFromProduct(@PathVariable("id") int productId){
+        Category category=categoryService.getCategoryFromProduct(productId);
+
+        CategoryResponseDTO categoryResponseDTO=new CategoryResponseDTO();
+        categoryResponseDTO.setCategoryName(category.getName());
+        categoryResponseDTO.setCategoryDescription(category.getDescription());
+
+        return ResponseEntity.ok(categoryResponseDTO);
     }
 
     @DeleteMapping("/category/{id}")
@@ -44,4 +76,6 @@ public class CategoryController {
         Boolean result=categoryService.deleteProduct(id);
         return  ResponseEntity.ok(result);
     }
+
+
 }
