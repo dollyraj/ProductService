@@ -3,9 +3,11 @@ package dev.dolly.ProductService.service;
 import dev.dolly.ProductService.dtos.request.CategoryRequestDTO;
 import dev.dolly.ProductService.exception.CategoryNotFoundException;
 import dev.dolly.ProductService.exception.DuplicateCategoryNameException;
+import dev.dolly.ProductService.exception.ProductNotFoundException;
 import dev.dolly.ProductService.model.Category;
 import dev.dolly.ProductService.model.Product;
 import dev.dolly.ProductService.repository.CategoryRepository;
+import dev.dolly.ProductService.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,13 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
     @Autowired
+    private ProductRepository productRepository;
+
+   /* @Autowired
     private ProductService productService;
+    ---->caused circular dependency
+    */
 
     public Category createCategory(CategoryRequestDTO categoryRequestDTO) {
         Optional<Category> categoryOptional=categoryRepository.findByName(categoryRequestDTO.getCategoryName());
@@ -78,8 +84,12 @@ public class CategoryService {
 
 
     public Category getCategoryFromProduct(int productId){
-        Product product= productService.getProduct(productId);
-        Optional<Category> optionalCategory=categoryRepository.findByProductsIn(List.of(product));
+        Optional<Product>  productOptional= productRepository.findById(productId);
+        if(productOptional.isEmpty())
+            throw new ProductNotFoundException("Product not found with id: "+productId);
+
+
+        Optional<Category> optionalCategory=categoryRepository.findByProductsIn(List.of(productOptional.get()));
 
         if(optionalCategory.isEmpty()){
             throw new CategoryNotFoundException("Category not Found for Product with: "+productId);
