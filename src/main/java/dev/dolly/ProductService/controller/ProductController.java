@@ -2,7 +2,10 @@ package dev.dolly.ProductService.controller;
 
 import dev.dolly.ProductService.dtos.request.FakeStoreProductDTO;
 import dev.dolly.ProductService.dtos.request.ProductProjection;
+import dev.dolly.ProductService.dtos.request.ProductRequestDTO;
+import dev.dolly.ProductService.dtos.response.CategoryResponseDTO;
 import dev.dolly.ProductService.dtos.response.ProductResponseDTO;
+import dev.dolly.ProductService.model.Category;
 import dev.dolly.ProductService.model.Product;
 import dev.dolly.ProductService.service.CategoryService;
 import dev.dolly.ProductService.service.ProductService;
@@ -22,8 +25,8 @@ public class ProductController {
 
 
     @PostMapping("/product")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
-        Product savedProduct=productService.saveProduct(product);
+    public ResponseEntity<Product> createProduct(@RequestBody ProductRequestDTO productRequestDTO){
+        Product savedProduct=productService.saveProduct(productRequestDTO);
         return ResponseEntity.ok(savedProduct);
 
     }
@@ -38,23 +41,6 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable("id") int id){
         Product savedProduct = productService.getProduct(id);
         return ResponseEntity.ok(savedProduct);
-    }
-
-    @GetMapping("/product/category/{id}")
-    public ResponseEntity<List<ProductResponseDTO>> getAllProductsByCategory(@PathVariable("id") int categoryId){
-           List<Product> savedProducts=productService.getAllProductsByCategoryId(categoryId);
-           List<ProductResponseDTO> productResponseDTOS=new ArrayList<>();
-           for(Product product:savedProducts){
-               System.out.println(product);
-               ProductResponseDTO productResponseDTO=new ProductResponseDTO();
-               productResponseDTO.setProductName(product.getName());
-               productResponseDTO.setProductDescription(product.getDescription());
-               productResponseDTO.setProductPrice(product.getPrice());
-               productResponseDTO.setRating(product.getRating());
-               productResponseDTOS.add(productResponseDTO);
-           }
-
-           return ResponseEntity.ok(productResponseDTOS);
     }
 
     @GetMapping("/product/desc/{description}")
@@ -82,6 +68,17 @@ public class ProductController {
         return ResponseEntity.ok(savedProduct);
     }
 
+    //getCategoryFromProduct
+    @GetMapping("/category/product/{id}")
+    public ResponseEntity<CategoryResponseDTO> getCategoryFromProduct(@PathVariable("id") int productId){
+        Category category=productService.getCategoryFromProduct(productId);
+
+        CategoryResponseDTO categoryResponseDTO=new CategoryResponseDTO();
+        categoryResponseDTO.setCategoryName(category.getName());
+        categoryResponseDTO.setCategoryDescription(category.getDescription());
+
+        return ResponseEntity.ok(categoryResponseDTO);
+    }
 
     @GetMapping("/products/fake")
     public FakeStoreProductDTO[] getAllFakeProducts(){

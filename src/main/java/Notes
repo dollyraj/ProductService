@@ -57,3 +57,18 @@ ProductInfoDTO[2]
 3.Get All Products from Category API
 4.Get Category from Product API
 5.DTOs based APIs
+
+From entity level
+--> Product does not contain category
+--> Category contains list of product
+JPA behaves at entity level not at DB level so
+First save the product,then add the product to category,then save category
+
+At DB level
+-->Product table--> contains categoryId as foreign key
+-->Category table-->does not contain any info
+
+
+Always write the code on basis of how the entities are designed not how the tables are looking.
+
+

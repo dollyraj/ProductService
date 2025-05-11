@@ -22,12 +22,8 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private ProductRepository productRepository;
-
-   /* @Autowired
     private ProductService productService;
-    ---->caused circular dependency
-    */
+
 
     public Category createCategory(CategoryRequestDTO categoryRequestDTO) {
         Optional<Category> categoryOptional=categoryRepository.findByName(categoryRequestDTO.getCategoryName());
@@ -60,41 +56,23 @@ public class CategoryService {
         return updatedCategory;
     }
 
-    public boolean deleteProduct(int productId){
-        categoryRepository.deleteById(productId);
+    public boolean deleteCategory(int categoryId){
+        Category category=getCategoryById(categoryId);
+        for(Product product:category.getProducts()){
+            productService.deleteProduct(product.getId());
+        }
+        categoryRepository.deleteById(categoryId);
         return true;
     }
 
+
     public List<Product> getAllProductsByCategory(int categoryId){
         Category savedCategory=getCategoryById(categoryId);
-        System.out.println(savedCategory.getName());
+        //System.out.println(savedCategory.getName());
         List<Product> products=savedCategory.getProducts();
-        System.out.println(products.size());
+        //System.out.println(products.size());
         return products;
     }
 
-    /* getting circular dependency error
-    ┌─────┐
-            |  categoryService (field private dev.dolly.ProductService.service.ProductService dev.dolly.ProductService.service.CategoryService.productService)
-↑     ↓
-        |  productService (field dev.dolly.ProductService.service.CategoryService dev.dolly.ProductService.service.ProductService.categoryService)
-└─────┘
 
-     */
-
-
-    public Category getCategoryFromProduct(int productId){
-        Optional<Product>  productOptional= productRepository.findById(productId);
-        if(productOptional.isEmpty())
-            throw new ProductNotFoundException("Product not found with id: "+productId);
-
-
-        Optional<Category> optionalCategory=categoryRepository.findByProductsIn(List.of(productOptional.get()));
-
-        if(optionalCategory.isEmpty()){
-            throw new CategoryNotFoundException("Category not Found for Product with: "+productId);
-        }
-
-        return optionalCategory.get();
-    }
 }
