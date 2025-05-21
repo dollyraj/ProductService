@@ -11,6 +11,9 @@ import dev.dolly.ProductService.model.Product;
 import dev.dolly.ProductService.repository.CategoryRepository;
 import dev.dolly.ProductService.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,8 +74,17 @@ public class ProductService {
 
     }
 
+    public Page<Product> getAllProductsPaginated(int pageNumber,String filterAsc,String filterDesc){
+
+        //first create sort object
+        //Sort sort=Sort.by("price").ascending().and(Sort.by("rating").descending());
+        //To D0---> Implement using sortDTO
+        Sort sort=Sort.by(filterAsc).ascending().and(Sort.by(filterDesc).descending());
+        return productRepository.findAll(PageRequest.of(pageNumber,3,sort));
+    }
+
     public List<Product> getAllProducts(){
-     return productRepository.findAll();
+        return productRepository.findAll();
     }
 
     public Product updateProduct(Product newProduct,int productId){

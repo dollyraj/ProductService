@@ -10,6 +10,7 @@ import dev.dolly.ProductService.model.Product;
 import dev.dolly.ProductService.service.CategoryService;
 import dev.dolly.ProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,11 @@ public class ProductController {
 
     }
 
+    @GetMapping("/all/product/{pageNumber}/{filterAsc}/{filterDesc}")
+    public ResponseEntity<Page<Product>> getAllProductsPaginated(@PathVariable("pageNumber")int pageNumber,@PathVariable("filterAsc") String filterAsc,@PathVariable("filterDesc") String filterDesc){
+        Page<Product> products = productService.getAllProductsPaginated(pageNumber,filterAsc,filterDesc);
+        return ResponseEntity.ok(products);
+    }
     @GetMapping("/product")
     public ResponseEntity<List<Product>> getAllProducts(){
         List<Product> products = productService.getAllProducts();
