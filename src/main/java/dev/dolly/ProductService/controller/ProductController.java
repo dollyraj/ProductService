@@ -32,6 +32,11 @@ public class ProductController {
 
     }
 
+    @PostMapping("/product/create/{n}")
+    public ResponseEntity<Boolean> createNProducts(@PathVariable("n") Integer n){
+        return ResponseEntity.ok(productService.createNProducts(n));
+    }
+
     @GetMapping("/all/product/{pageNumber}/{filterAsc}/{filterDesc}")
     public ResponseEntity<Page<Product>> getAllProductsPaginated(@PathVariable("pageNumber")int pageNumber,@PathVariable("filterAsc") String filterAsc,@PathVariable("filterDesc") String filterDesc){
         Page<Product> products = productService.getAllProductsPaginated(pageNumber,filterAsc,filterDesc);

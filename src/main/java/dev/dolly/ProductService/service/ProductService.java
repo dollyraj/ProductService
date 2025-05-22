@@ -4,6 +4,7 @@ import dev.dolly.ProductService.client.FakeStoreClient;
 import dev.dolly.ProductService.dtos.request.FakeStoreProductDTO;
 import dev.dolly.ProductService.dtos.request.ProductProjection;
 import dev.dolly.ProductService.dtos.request.ProductRequestDTO;
+import dev.dolly.ProductService.dtos.request.SortDTO;
 import dev.dolly.ProductService.exception.CategoryNotFoundException;
 import dev.dolly.ProductService.exception.ProductNotFoundException;
 import dev.dolly.ProductService.model.Category;
@@ -14,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +61,20 @@ public class ProductService {
         return savedProduct;
     }
 
+    public boolean createNProducts(int n){
+        for(int i=1;i<=n;i++){
+            Product product=new Product();
+            product.setName("Product_"+i);
+            product.setDescription("Product Description "+i);
+            product.setPrice(100*i+i);
+            product.setQuantity(i);
+            product.setRating(i*0.05);
+            productRepository.save(product);
+        }
+
+        return true;
+    }
+
     public boolean deleteProduct(int productId){
        productRepository.deleteById(productId);
        return true;
@@ -82,6 +99,15 @@ public class ProductService {
         Sort sort=Sort.by(filterAsc).ascending().and(Sort.by(filterDesc).descending());
         return productRepository.findAll(PageRequest.of(pageNumber,3,sort));
     }
+
+    /*public Page<Product> getAllProductsPaginated(int pageNumber,List<SortDTO> sortDTOS){
+
+        //first create sort object
+        //Sort sort=Sort.by("price").ascending().and(Sort.by("rating").descending());
+        //To D0---> Implement using sortDTO
+        Sort sort=Sort.by(filterAsc).ascending().and(Sort.by(filterDesc).descending());
+        return productRepository.findAll(PageRequest.of(pageNumber,3,sort));
+    }*/
 
     public List<Product> getAllProducts(){
         return productRepository.findAll();
